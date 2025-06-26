@@ -1,42 +1,91 @@
-import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
-import { View } from "react-native";
-import * as RadioGroupPrimitive from "@rn-primitives/radio-group";
-import { cn } from "@/lib/utils";
+import { Circle, CircleDot } from 'lucide-react-native';
+import { createContext, useContext, useState } from 'react';
+import { Text, TouchableOpacity, useColorScheme } from 'react-native';
 
-const RadioGroup = forwardRef<
-  ElementRef<typeof RadioGroupPrimitive.Root>,
-  ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>
->(({ className, ...props }, ref) => {
+import { cn } from '@/lib/utils';
+import { theme } from '../styles/theme';
+
+interface RadioGroupContextType {
+  value: string;
+  setValue: (value: string) => void;
+}
+const RadioGroupContext = createContext<RadioGroupContextType | undefined>(
+  undefined
+);
+
+interface RadioGroupProps {
+  defaultValue: string;
+  children: React.ReactNode;
+}
+function RadioGroup({ defaultValue, children }: RadioGroupProps) {
+  const [value, setValue] = useState<string>(defaultValue);
+
   return (
-    <RadioGroupPrimitive.Root
-      className={cn("web:grid gap-2", className)}
-      {...props}
-      ref={ref}
-    />
+    <RadioGroupContext.Provider value={{ value, setValue }}>
+      {children}
+    </RadioGroupContext.Provider>
   );
-});
-RadioGroup.displayName = RadioGroupPrimitive.Root.displayName;
+}
 
-const RadioGroupItem = forwardRef<
-  ElementRef<typeof RadioGroupPrimitive.Item>,
-  ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>
->(({ className, ...props }, ref) => {
+interface RadioGroupItemProps
+  extends React.ComponentPropsWithoutRef<typeof TouchableOpacity> {
+  value: string;
+  label?: string;
+  labelClasses?: string;
+}
+function RadioGroupItem({
+  value,
+  className,
+  label,
+  labelClasses,
+  ...props
+}: RadioGroupItemProps) {
+  const context = useContext(RadioGroupContext);
+  if (!context) {
+    throw new Error('RadioGroupItem must be used within a RadioGroup');
+  }
+  const { value: selectedValue, setValue } = context;
+
+  const colorScheme = useColorScheme();
+  const currentTheme = colorScheme === 'dark' ? theme.dark : theme.light;
+
   return (
-    <RadioGroupPrimitive.Item
-      ref={ref}
-      className={cn(
-        "aspect-square h-4 w-4 native:h-5 native:w-5 rounded-full justify-center items-center border border-primary text-primary web:ring-offset-background web:focus:outline-none web:focus-visible:ring-2 web:focus-visible:ring-ring web:focus-visible:ring-offset-2",
-        props.disabled && "web:cursor-not-allowed opacity-50",
-        className
-      )}
+    <TouchableOpacity
+      onPress={() => setValue(value)}
+      className={cn('flex flex-row items-center gap-2', className)}
       {...props}
     >
-      <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
-        <View className="aspect-square h-[9px] w-[9px] native:h-[10] native:w-[10] bg-primary rounded-full" />
-      </RadioGroupPrimitive.Indicator>
-    </RadioGroupPrimitive.Item>
+      {selectedValue === value ? (
+        <CircleDot color={currentTheme.foreground} />
+      ) : (
+        <Circle color={currentTheme.foreground} />
+      )}
+      {label && (
+        <Text className={cn('text-primary', labelClasses)}>{label}</Text>
+      )}
+    </TouchableOpacity>
   );
-});
-RadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName;
+}
 
-export { RadioGroup, RadioGroupItem };
+interface RadioGroupLabelProps
+  extends React.ComponentPropsWithoutRef<typeof TouchableOpacity> {
+  value: string;
+}
+function RadioGroupLabel({ value, className, ...props }: RadioGroupLabelProps) {
+  const context = useContext(RadioGroupContext);
+  if (!context) {
+    throw new Error('RadioGroupLabel must be used within a RadioGroup');
+  }
+  const { setValue } = context;
+
+  return (
+    <TouchableOpacity
+      className={className}
+      onPress={() => setValue(value)}
+      {...props}
+    />
+  );
+}
+
+export { RadioGroup, RadioGroupItem, RadioGroupLabel };
+

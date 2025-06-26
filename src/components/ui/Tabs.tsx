@@ -1,66 +1,99 @@
-import { TextClassContext } from "./Text";
-import * as TabsPrimitive from "@rn-primitives/tabs";
-import { cn } from "@/lib/utils";
-import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
+import { createContext, useContext, useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 
-const Tabs = TabsPrimitive.Root;
+import { cn } from '@/lib/utils';
 
-const TabsList = forwardRef<
-  ElementRef<typeof TabsPrimitive.List>,
-  ComponentPropsWithoutRef<typeof TabsPrimitive.List>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.List
-    ref={ref}
-    className={cn(
-      "web:inline-flex h-10 native:h-12 items-center justify-center rounded-md bg-muted p-1 native:px-1.5",
-      className
-    )}
-    {...props}
-  />
-));
-TabsList.displayName = TabsPrimitive.List.displayName;
+interface TabsContextProps {
+  activeTab: string;
+  setActiveTab: (id: string) => void;
+}
+const TabsContext = createContext<TabsContextProps>({
+  activeTab: '',
+  setActiveTab: () => { },
+});
 
-const TabsTrigger = forwardRef<
-  ElementRef<typeof TabsPrimitive.Trigger>,
-  ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
->(({ className, ...props }, ref) => {
-  const { value } = TabsPrimitive.useRootContext();
+interface TabsProps {
+  defaultValue: string;
+  children: React.ReactNode;
+}
+function Tabs({ defaultValue, children }: TabsProps) {
+  const [activeTab, setActiveTab] = useState(defaultValue);
+
   return (
-    <TextClassContext.Provider
-      value={cn(
-        "text-sm native:text-base font-medium text-muted-foreground web:transition-all",
-        value === props.value && "text-foreground"
-      )}
+    <TabsContext.Provider value={{ activeTab, setActiveTab }}>
+      {children}
+    </TabsContext.Provider>
+  );
+}
+
+function TabsList({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof View>) {
+  return (
+    <View
+      className={cn('flex flex-row justify-center', className)}
+      {...props}
+    />
+  );
+}
+
+interface TabsTriggerProps
+  extends React.ComponentPropsWithoutRef<typeof TouchableOpacity> {
+  value: string;
+  title: string;
+  textClasses?: string;
+}
+function TabsTrigger({
+  value,
+  title,
+  className,
+  textClasses,
+  ...props
+}: TabsTriggerProps) {
+  const { activeTab, setActiveTab } = useContext(TabsContext);
+
+  return (
+    <TouchableOpacity
+      className={cn('px-8 py-3 rounded-md w-1/2 bg-muted', {
+        'bg-foreground': activeTab === value,
+        className,
+      })}
+      onPress={() => setActiveTab(value)}
+      {...props}
     >
-      <TabsPrimitive.Trigger
-        ref={ref}
+      <Text
         className={cn(
-          "inline-flex items-center justify-center shadow-none web:whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium web:ring-offset-background web:transition-all web:focus-visible:outline-none web:focus-visible:ring-2 web:focus-visible:ring-ring web:focus-visible:ring-offset-2",
-          props.disabled && "web:pointer-events-none opacity-50",
-          props.value === value &&
-            "bg-background shadow-lg shadow-foreground/10",
+          'font-medium text-center text-muted-foreground',
+          { 'text-background': activeTab === value },
+          textClasses
+        )}
+      >
+        {title}
+      </Text>
+    </TouchableOpacity>
+  );
+}
+
+interface TabsContentProps extends React.ComponentPropsWithoutRef<typeof View> {
+  value: string;
+}
+function TabsContent({ value, className, ...props }: TabsContentProps) {
+  const { activeTab } = useContext(TabsContext);
+
+  if (value === activeTab)
+    return (
+      <View
+        className={cn(
+          'border border-border mt-2 px-4 py-4 rounded-xl',
           className
         )}
         {...props}
       />
-    </TextClassContext.Provider>
-  );
-});
-TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
+    );
 
-const TabsContent = forwardRef<
-  ElementRef<typeof TabsPrimitive.Content>,
-  ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.Content
-    ref={ref}
-    className={cn(
-      "web:ring-offset-background web:focus-visible:outline-none web:focus-visible:ring-2 web:focus-visible:ring-ring web:focus-visible:ring-offset-2",
-      className
-    )}
-    {...props}
-  />
-));
-TabsContent.displayName = TabsPrimitive.Content.displayName;
+  return null;
+}
 
 export { Tabs, TabsContent, TabsList, TabsTrigger };
+

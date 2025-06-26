@@ -1,78 +1,43 @@
-import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
-import { Platform, View } from "react-native";
-import Animated, {
-  Extrapolation,
-  interpolate,
-  useAnimatedStyle,
-  useDerivedValue,
-  withSpring,
-} from "react-native-reanimated";
-import * as ProgressPrimitive from "@rn-primitives/progress";
-import { cn } from "@/lib/utils";
+import { useEffect, useRef } from 'react';
+import { Animated, View as RnView, type View } from 'react-native';
 
-const Progress = forwardRef<
-  ElementRef<typeof ProgressPrimitive.Root>,
-  ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> & {
-    indicatorClassName?: string;
-  }
->(({ className, value, indicatorClassName, ...props }, ref) => {
+import { cn } from '@/lib/utils';
+
+function Progress({
+  className,
+  ...props
+}: { className?: string; value: number } & React.ComponentPropsWithoutRef<
+  typeof View
+>) {
+  const widthAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(widthAnim, {
+      toValue: props.value,
+      duration: 1000,
+      useNativeDriver: false,
+    }).start();
+  }, [widthAnim, props.value]);
+
   return (
-    <ProgressPrimitive.Root
-      ref={ref}
+    <RnView
       className={cn(
-        "relative h-4 w-full overflow-hidden rounded-full bg-secondary",
+        'h-4 w-full overflow-hidden rounded-full bg-secondary',
         className
       )}
-      {...props}
     >
-      <Indicator value={value} className={indicatorClassName} />
-    </ProgressPrimitive.Root>
+      <Animated.View
+        className={cn('bg-primary h-full')}
+        style={{
+          width: widthAnim.interpolate({
+            inputRange: [0, 100],
+            outputRange: ['0%', '100%'],
+          }),
+        }}
+      />
+    </RnView>
   );
-});
-Progress.displayName = ProgressPrimitive.Root.displayName;
+}
 
 export { Progress };
 
-function Indicator({
-  value,
-  className,
-}: {
-  value: number | undefined | null;
-  className?: string;
-}) {
-  const progress = useDerivedValue(() => value ?? 0);
-
-  const indicator = useAnimatedStyle(() => {
-    return {
-      width: withSpring(
-        `${interpolate(progress.value, [0, 100], [1, 100], Extrapolation.CLAMP)}%`,
-        { overshootClamping: true }
-      ),
-    };
-  });
-
-  if (Platform.OS === "web") {
-    return (
-      <View
-        className={cn(
-          "h-full w-full flex-1 bg-primary web:transition-all",
-          className
-        )}
-        style={{ transform: `translateX(-${100 - (value ?? 0)}%)` }}
-      >
-        <ProgressPrimitive.Indicator
-          className={cn("h-full w-full ", className)}
-        />
-      </View>
-    );
-  }
-
-  return (
-    <ProgressPrimitive.Indicator asChild>
-      <Animated.View
-        style={indicator}
-        className={cn("h-full bg-foreground", className)}
-      />
-    </ProgressPrimitive.Indicator>
-  );
-}

@@ -1,4 +1,12 @@
+import { cn } from "@/lib/utils";
 import * as DropdownMenuPrimitive from "@rn-primitives/dropdown-menu";
+import {
+  Check,
+  ChevronDown,
+  ChevronRight,
+  ChevronUp,
+} from "lucide-react-native";
+import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
 import {
   Platform,
   StyleProp,
@@ -7,15 +15,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-import { cn } from "@/lib/utils";
-import { TextClassContext } from "./Text";
-import {
-  Check,
-  ChevronDown,
-  ChevronRight,
-  ChevronUp,
-} from "lucide-react-native";
-import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
+import { TextClassContext } from "../ui/Text";
 
 const DropdownMenu = DropdownMenuPrimitive.Root;
 
@@ -107,9 +107,9 @@ const DropdownMenuContent = forwardRef<
           style={
             overlayStyle
               ? StyleSheet.flatten([
-                  Platform.OS !== "web" ? StyleSheet.absoluteFill : undefined,
-                  overlayStyle,
-                ] as ViewStyle)
+                Platform.OS !== "web" ? StyleSheet.absoluteFill : undefined,
+                overlayStyle,
+              ] as ViewStyle)
               : Platform.OS !== "web"
                 ? StyleSheet.absoluteFill
                 : undefined
@@ -266,5 +266,6 @@ export {
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 };
+

@@ -1,87 +1,115 @@
-import { ComponentPropsWithoutRef, forwardRef } from "react";
-import { Text, View } from "react-native";
-import { TextClassContext } from "./Text";
-import { TextRef, ViewRef } from "@rn-primitives/types";
-import { cn } from "@/lib/utils";
+import { Text, View } from 'react-native';
 
-const Card = forwardRef<ViewRef, ComponentPropsWithoutRef<typeof View>>(
-  ({ className, ...props }, ref) => (
+import { cn } from '@/lib/utils';
+
+function Card({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof View>) {
+  return (
     <View
-      ref={ref}
-      className={cn(
-        "rounded-lg border border-border bg-card shadow-sm shadow-foreground/10",
-        className
-      )}
+      className={cn('rounded-xl border border-border', className)}
       {...props}
     />
-  )
-);
-Card.displayName = "Card";
+  );
+}
 
-const CardHeader = forwardRef<ViewRef, ComponentPropsWithoutRef<typeof View>>(
-  ({ className, ...props }, ref) => (
-    <View
-      ref={ref}
-      className={cn("flex flex-col space-y-1.5 p-6", className)}
-      {...props}
-    />
-  )
-);
-CardHeader.displayName = "CardHeader";
+function CardHeader({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof View>) {
+  return <View className={cn('p-4', className)} {...props} />;
+}
 
-const CardTitle = forwardRef<TextRef, ComponentPropsWithoutRef<typeof Text>>(
-  ({ className, ...props }, ref) => (
+function CardTitle({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof Text>) {
+  return (
     <Text
-      role="heading"
-      aria-level={3}
-      ref={ref}
       className={cn(
-        "text-2xl text-card-foreground font-semibold leading-none tracking-tight",
+        'text-2xl font-semibold tracking-tight text-primary',
         className
       )}
       {...props}
     />
-  )
-);
-CardTitle.displayName = "CardTitle";
+  );
+}
 
-const CardDescription = forwardRef<
-  TextRef,
-  React.ComponentPropsWithoutRef<typeof Text>
->(({ className, ...props }, ref) => (
-  <Text
-    ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
-    {...props}
-  />
-));
-CardDescription.displayName = "CardDescription";
-
-const CardContent = forwardRef<ViewRef, ComponentPropsWithoutRef<typeof View>>(
-  ({ className, ...props }, ref) => (
-    <TextClassContext.Provider value="text-card-foreground">
-      <View ref={ref} className={cn("p-6 pt-0", className)} {...props} />
-    </TextClassContext.Provider>
-  )
-);
-CardContent.displayName = "CardContent";
-
-const CardFooter = forwardRef<ViewRef, ComponentPropsWithoutRef<typeof View>>(
-  ({ className, ...props }, ref) => (
-    <View
-      ref={ref}
-      className={cn("flex flex-row items-center p-6 pt-0", className)}
+function CardDescription({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof Text>) {
+  return (
+    <Text
+      className={cn('text-sm text-muted-foreground', className)}
       {...props}
     />
-  )
-);
-CardFooter.displayName = "CardFooter";
+  );
+}
+
+function CardContent({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof View>) {
+  return <View className={cn('p-4 pt-0', className)} {...props} />;
+}
+
+// TODO: style
+function CardFooter({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof View>) {
+  return (
+    <View
+      className={cn(className, 'flex flex-row items-center p-4 pt-0')}
+      {...props}
+    />
+  );
+}
+
+interface SimpleCardProps {
+  className?: string;
+  title?: string;
+  description?: string;
+  content?: string;
+  footer?: string;
+}
+function SimpleCard({
+  className,
+  title,
+  description,
+  content,
+  footer,
+}: SimpleCardProps) {
+  return (
+    <Card className={className}>
+      <CardHeader>
+        {title && (
+          <Text className="text-2xl font-semibold tracking-tight text-primary">
+            {title}
+          </Text>
+        )}
+        {description && (
+          <Text className="text-sm text-muted-foreground">{description}</Text>
+        )}
+      </CardHeader>
+      {content && (
+        <CardContent>
+          <Text className="text-base text-primary">{content}</Text>
+        </CardContent>
+      )}
+      {footer && (
+        <CardFooter>
+          <Text className="text-sm text-muted-foreground">{footer}</Text>
+        </CardFooter>
+      )}
+    </Card>
+  );
+}
 
 export {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+  Card, CardContent, CardDescription, CardFooter, CardHeader,
+  CardTitle, SimpleCard
 };
+

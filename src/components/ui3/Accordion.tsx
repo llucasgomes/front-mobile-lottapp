@@ -19,7 +19,7 @@ import Animated, {
   useDerivedValue,
   withTiming,
 } from "react-native-reanimated";
-import { TextClassContext } from "./Text";
+import { TextClassContext } from "../ui/Text";
 
 const Accordion = forwardRef<
   ElementRef<typeof AccordionPrimitive.Root>,

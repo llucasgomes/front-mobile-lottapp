@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
+import { Button } from '@/components/ui3/Button';
 import { useColorScheme } from "nativewind";
 import React, { useEffect } from 'react';
 
