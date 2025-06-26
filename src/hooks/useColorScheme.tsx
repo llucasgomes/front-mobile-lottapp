@@ -8,7 +8,7 @@ export const ThemeToggle = () => {
     const { colorScheme, setColorScheme } = useColorScheme();
 
     useEffect(() => {
-        setColorScheme('dark');
+        setColorScheme('light');
     }, []);
 
     const toggleColorScheme = () => {
