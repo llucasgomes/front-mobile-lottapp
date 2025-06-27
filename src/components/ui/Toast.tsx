@@ -65,8 +65,7 @@ function Toast({
             }),
           },
         ],
-      }}
-    >
+      }}>
       <Text className="font-semibold text-left text-background">{message}</Text>
       {showProgress && (
         <View className="mt-2 rounded">
@@ -124,7 +123,7 @@ function ToastProvider({
     position: 'top' | 'bottom' = 'top',
     showProgress: boolean = true
   ) => {
-    setMessages(prev => [
+    setMessages((prev) => [
       ...prev,
       {
         id: Date.now(),
@@ -138,7 +137,7 @@ function ToastProvider({
   };
 
   const removeToast = (id: number) => {
-    setMessages(prev => prev.filter(message => message.id !== id));
+    setMessages((prev) => prev.filter((message) => message.id !== id));
   };
 
   return (
@@ -148,9 +147,8 @@ function ToastProvider({
         className={cn('absolute left-0 right-0', {
           'top-[45px]': position === 'top',
           'bottom-0': position === 'bottom',
-        })}
-      >
-        {messages.map(message => (
+        })}>
+        {messages.map((message) => (
           <Toast
             key={message.id}
             id={message.id}
@@ -175,4 +173,3 @@ function useToast() {
 }
 
 export { Toast, ToastProvider, ToastVariant, toastVariants, useToast };
-

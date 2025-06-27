@@ -13,11 +13,7 @@ const DialogContext = createContext<DialogContextType | undefined>(undefined);
 function Dialog({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
 
-  return (
-    <DialogContext.Provider value={{ open, setOpen }}>
-      {children}
-    </DialogContext.Provider>
-  );
+  return <DialogContext.Provider value={{ open, setOpen }}>{children}</DialogContext.Provider>;
 }
 
 function DialogTrigger({ children }: any) {
@@ -26,34 +22,16 @@ function DialogTrigger({ children }: any) {
   return cloneElement(children, { onPress: () => setOpen(true) });
 }
 
-function DialogContent({
-  className,
-  children,
-}: {
-  className?: string;
-  children: React.ReactNode;
-}) {
+function DialogContent({ className, children }: { className?: string; children: React.ReactNode }) {
   const { open, setOpen } = useDialog();
 
   return (
-    <Modal
-      transparent
-      animationType="fade"
-      visible={open}
-      onRequestClose={() => setOpen(false)}
-    >
-      <TouchableOpacity
-        className="w-full h-full"
-        onPress={() => setOpen(false)}
-      >
+    <Modal transparent animationType="fade" visible={open} onRequestClose={() => setOpen(false)}>
+      <TouchableOpacity className="w-full h-full" onPress={() => setOpen(false)}>
         <View className="flex flex-1 justify-center items-center bg-black/75">
           <TouchableOpacity
-            className={cn(
-              'border border-border bg-background rounded-lg p-6 shadow-lg',
-              className
-            )}
-            activeOpacity={1}
-          >
+            className={cn('border border-border bg-background rounded-lg p-6 shadow-lg', className)}
+            activeOpacity={1}>
             {children}
           </TouchableOpacity>
         </View>
@@ -71,4 +49,3 @@ const useDialog = () => {
 };
 
 export { Dialog, DialogContent, DialogTrigger, useDialog };
-

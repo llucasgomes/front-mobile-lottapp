@@ -1,31 +1,29 @@
 import { type VariantProps, cva } from 'class-variance-authority';
+
 import { Text, TouchableOpacity } from 'react-native';
 
 import { cn } from '@/lib/utils';
 
-const buttonVariants = cva(
-  'flex flex-row items-center justify-center rounded-xl',
-  {
-    variants: {
-      variant: {
-        default: 'bg-primary',
-        secondary: 'bg-secondary',
-        destructive: 'bg-destructive',
-        ghost: 'bg-slate-700',
-        link: 'text-primary underline-offset-4',
-      },
-      size: {
-        default: 'h-10 px-4',
-        sm: 'h-8 px-2',
-        lg: 'h-16 px-8',
-      },
+const buttonVariants = cva('flex flex-row items-center justify-center rounded-xl', {
+  variants: {
+    variant: {
+      default: 'bg-primary',
+      secondary: 'bg-secondary',
+      destructive: 'bg-destructive',
+      ghost: 'bg-slate-700',
+      link: 'text-primary underline-offset-4',
     },
-    defaultVariants: {
-      variant: 'default',
-      size: 'default',
+    size: {
+      default: 'h-10 px-4',
+      sm: 'h-8 px-2',
+      lg: 'h-16 px-8',
     },
-  }
-);
+  },
+  defaultVariants: {
+    variant: 'default',
+    size: 'default',
+  },
+});
 
 const buttonTextVariants = cva('text-center font-medium', {
   variants: {
@@ -50,28 +48,14 @@ const buttonTextVariants = cva('text-center font-medium', {
 
 interface ButtonProps
   extends React.ComponentPropsWithoutRef<typeof TouchableOpacity>,
-  VariantProps<typeof buttonVariants> {
+    VariantProps<typeof buttonVariants> {
   label: string;
   labelClasses?: string;
 }
-function Button({
-  label,
-  labelClasses,
-  className,
-  variant,
-  size,
-  ...props
-}: ButtonProps) {
+function Button({ label, labelClasses, className, variant, size, ...props }: ButtonProps) {
   return (
-    <TouchableOpacity
-      className={cn(buttonVariants({ variant, size, className }))}
-      {...props}
-    >
-      <Text
-        className={cn(
-          buttonTextVariants({ variant, size, className: labelClasses })
-        )}
-      >
+    <TouchableOpacity className={cn(buttonVariants({ variant, size, className }))} {...props}>
+      <Text className={cn(buttonTextVariants({ variant, size, className: labelClasses }))}>
         {label}
       </Text>
     </TouchableOpacity>
@@ -79,4 +63,3 @@ function Button({
 }
 
 export { Button, buttonTextVariants, buttonVariants };
-

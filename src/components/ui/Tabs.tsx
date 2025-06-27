@@ -9,7 +9,7 @@ interface TabsContextProps {
 }
 const TabsContext = createContext<TabsContextProps>({
   activeTab: '',
-  setActiveTab: () => { },
+  setActiveTab: () => {},
 });
 
 interface TabsProps {
@@ -20,37 +20,20 @@ function Tabs({ defaultValue, children }: TabsProps) {
   const [activeTab, setActiveTab] = useState(defaultValue);
 
   return (
-    <TabsContext.Provider value={{ activeTab, setActiveTab }}>
-      {children}
-    </TabsContext.Provider>
+    <TabsContext.Provider value={{ activeTab, setActiveTab }}>{children}</TabsContext.Provider>
   );
 }
 
-function TabsList({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<typeof View>) {
-  return (
-    <View
-      className={cn('flex flex-row justify-center', className)}
-      {...props}
-    />
-  );
+function TabsList({ className, ...props }: React.ComponentPropsWithoutRef<typeof View>) {
+  return <View className={cn('flex flex-row justify-center', className)} {...props} />;
 }
 
-interface TabsTriggerProps
-  extends React.ComponentPropsWithoutRef<typeof TouchableOpacity> {
+interface TabsTriggerProps extends React.ComponentPropsWithoutRef<typeof TouchableOpacity> {
   value: string;
   title: string;
   textClasses?: string;
 }
-function TabsTrigger({
-  value,
-  title,
-  className,
-  textClasses,
-  ...props
-}: TabsTriggerProps) {
+function TabsTrigger({ value, title, className, textClasses, ...props }: TabsTriggerProps) {
   const { activeTab, setActiveTab } = useContext(TabsContext);
 
   return (
@@ -60,15 +43,13 @@ function TabsTrigger({
         className,
       })}
       onPress={() => setActiveTab(value)}
-      {...props}
-    >
+      {...props}>
       <Text
         className={cn(
           'font-medium text-center text-muted-foreground',
           { 'text-background': activeTab === value },
           textClasses
-        )}
-      >
+        )}>
         {title}
       </Text>
     </TouchableOpacity>
@@ -84,10 +65,7 @@ function TabsContent({ value, className, ...props }: TabsContentProps) {
   if (value === activeTab)
     return (
       <View
-        className={cn(
-          'border border-border mt-2 px-4 py-4 rounded-xl',
-          className
-        )}
+        className={cn('border border-border mt-2 px-4 py-4 rounded-xl', className)}
         {...props}
       />
     );
@@ -96,4 +74,3 @@ function TabsContent({ value, className, ...props }: TabsContentProps) {
 }
 
 export { Tabs, TabsContent, TabsList, TabsTrigger };
-

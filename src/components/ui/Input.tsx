@@ -2,10 +2,10 @@ import { forwardRef } from 'react';
 import { TextInput, View } from 'react-native';
 
 import { cn } from '@/lib/utils';
+
 import { Text } from './Text';
 
-export interface InputProps
-  extends React.ComponentPropsWithoutRef<typeof TextInput> {
+export interface InputProps extends React.ComponentPropsWithoutRef<typeof TextInput> {
   label?: string;
   labelClasses?: string;
   inputClasses?: string;
@@ -26,4 +26,3 @@ const Input = forwardRef<React.ElementRef<typeof TextInput>, InputProps>(
 );
 
 export { Input };
-

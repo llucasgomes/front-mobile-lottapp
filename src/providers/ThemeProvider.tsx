@@ -1,62 +1,61 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
-    DarkTheme,
-    DefaultTheme,
-    ThemeProvider as RNThemeProvider,
-} from "@react-navigation/native";
-import { useColorScheme } from "nativewind";
-import { PropsWithChildren, useEffect, useMemo, useState } from "react";
-import { useColorScheme as RNUseColorScheme } from "react-native";
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider as RNThemeProvider,
+} from '@react-navigation/native';
+import { useColorScheme } from 'nativewind';
 
-DefaultTheme.colors.background = "white";
-DarkTheme.colors.background = "#09090B";
+import { PropsWithChildren, useEffect, useMemo, useState } from 'react';
+import { useColorScheme as RNUseColorScheme } from 'react-native';
+
+DefaultTheme.colors.background = 'white';
+DarkTheme.colors.background = '#09090B';
 
 export const ThemeProvider = ({ children }: PropsWithChildren) => {
-    const [loaded, setLoaded] = useState(false);
-    const { colorScheme, setColorScheme } = useColorScheme();
-    const rnColorScheme = RNUseColorScheme();
+  const [loaded, setLoaded] = useState(false);
+  const { colorScheme, setColorScheme } = useColorScheme();
+  const rnColorScheme = RNUseColorScheme();
 
-    useEffect(() => {
-        if (loaded) {
-            (async () => {
-                const theme = await AsyncStorage.getItem("theme");
+  useEffect(() => {
+    if (loaded) {
+      (async () => {
+        const theme = await AsyncStorage.getItem('theme');
 
-                if (!theme) {
-                    const cs = rnColorScheme === "dark" ? "dark" : "light";
+        if (!theme) {
+          const cs = rnColorScheme === 'dark' ? 'dark' : 'light';
 
-                    await AsyncStorage.setItem("theme", cs);
-                    setColorScheme(cs);
-                    return;
-                }
-
-                if (colorScheme && theme !== colorScheme) {
-                    await AsyncStorage.setItem("theme", colorScheme);
-                    return;
-                }
-            })();
+          await AsyncStorage.setItem('theme', cs);
+          setColorScheme(cs);
+          return;
         }
-    }, [colorScheme, loaded]);
 
-    useEffect(() => {
-        (async () => {
-            const theme = await AsyncStorage.getItem("theme");
+        if (colorScheme && theme !== colorScheme) {
+          await AsyncStorage.setItem('theme', colorScheme);
+          return;
+        }
+      })();
+    }
+  }, [colorScheme, loaded]);
 
-            if (theme) {
-                setColorScheme(theme as "light" | "dark");
-            }
+  useEffect(() => {
+    (async () => {
+      const theme = await AsyncStorage.getItem('theme');
 
-            setLoaded(true);
-        })();
-    }, []);
+      if (theme) {
+        setColorScheme(theme as 'light' | 'dark');
+      }
 
-    const isDarkMode = useMemo(
-        () => (!loaded && rnColorScheme === "dark") || colorScheme === "dark",
-        [loaded, rnColorScheme, colorScheme]
-    );
+      setLoaded(true);
+    })();
+  }, []);
 
-    return (
-        <RNThemeProvider value={isDarkMode ? DarkTheme : DefaultTheme}>
-            {children}
-        </RNThemeProvider>
-    );
+  const isDarkMode = useMemo(
+    () => (!loaded && rnColorScheme === 'dark') || colorScheme === 'dark',
+    [loaded, rnColorScheme, colorScheme]
+  );
+
+  return (
+    <RNThemeProvider value={isDarkMode ? DarkTheme : DefaultTheme}>{children}</RNThemeProvider>
+  );
 };

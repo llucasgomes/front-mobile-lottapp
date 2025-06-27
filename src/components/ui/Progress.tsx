@@ -6,9 +6,7 @@ import { cn } from '@/lib/utils';
 function Progress({
   className,
   ...props
-}: { className?: string; value: number } & React.ComponentPropsWithoutRef<
-  typeof View
->) {
+}: { className?: string; value: number } & React.ComponentPropsWithoutRef<typeof View>) {
   const widthAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -20,12 +18,7 @@ function Progress({
   }, [widthAnim, props.value]);
 
   return (
-    <RnView
-      className={cn(
-        'h-4 w-full overflow-hidden rounded-full bg-secondary',
-        className
-      )}
-    >
+    <RnView className={cn('h-4 w-full overflow-hidden rounded-full bg-secondary', className)}>
       <Animated.View
         className={cn('bg-primary h-full')}
         style={{
@@ -40,4 +33,3 @@ function Progress({
 }
 
 export { Progress };
-

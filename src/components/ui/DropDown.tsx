@@ -1,10 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, {
-  cloneElement,
-  createContext,
-  useContext,
-  useState,
-} from 'react';
+import React, { cloneElement, createContext, useContext, useState } from 'react';
 import { Text, View } from 'react-native';
 
 import { cn } from '@/lib/utils';
@@ -14,9 +9,7 @@ interface DropDownContextType {
   setOpen: (open: boolean) => void;
 }
 
-const DropDownContext = createContext<DropDownContextType | undefined>(
-  undefined
-);
+const DropDownContext = createContext<DropDownContextType | undefined>(undefined);
 
 const DropDown = ({ children }: { children: React.ReactNode }) => {
   const [open, setOpen] = useState<boolean>(false);
@@ -48,8 +41,7 @@ const DropDownContent = ({ className, children }: DropDownContentTypes) => {
           className={cn(
             'min-w-[8rem] w-full absolute flex gap-3 overflow-hidden rounded-md border border-border bg-background text-popover-foreground shadow-md mt-3 p-3 top-12 mx-auto justify-center z-50',
             className
-          )}
-        >
+          )}>
           {children}
         </View>
       )}
@@ -62,9 +54,7 @@ type DropDownLabelProps = {
 };
 
 const DropDownLabel = ({ labelTitle }: DropDownLabelProps) => {
-  return (
-    <Text className="text-xl font-semibold text-primary">{labelTitle}</Text>
-  );
+  return <Text className="text-xl font-semibold text-primary">{labelTitle}</Text>;
 };
 
 type DropDownItemProps = {
@@ -73,11 +63,7 @@ type DropDownItemProps = {
 };
 
 const DropDownItem = ({ children, className }: DropDownItemProps) => {
-  return (
-    <View className={cn('p-2 border border-border rounded-md', className)}>
-      {children}
-    </View>
-  );
+  return <View className={cn('p-2 border border-border rounded-md', className)}>{children}</View>;
 };
 
 const DropDownItemSeparator = () => {
@@ -91,6 +77,11 @@ const useDropdown = () => {
   return context;
 };
 export {
-  DropDown, DropDownContent, DropDownItem, DropDownItemSeparator, DropDownLabel, DropDownTrigger, useDropdown
+  DropDown,
+  DropDownContent,
+  DropDownItem,
+  DropDownItemSeparator,
+  DropDownLabel,
+  DropDownTrigger,
+  useDropdown,
 };
-
