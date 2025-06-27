@@ -7,10 +7,10 @@ import { Input } from '@/components/ui/Input';
 import { H1, P } from '@/components/ui/Typography';
 import '@/styles/global.css';
 
-export default function Step1() {
+export default function Step3() {
   const router = useRouter();
   return (
-    <View className="pt-11 px-6 flex-1 items-start justify-start  gap-5 ">
+    <View className="pt-11 px-6 flex-1 items-start  justify-start  gap-5 ">
       <View className="w-full flex flex-col gap-7 pt-11">
         <Image
           source={require('@/assets/images/password.png')}
@@ -18,17 +18,13 @@ export default function Step1() {
           resizeMode="contain"
         />
         <H1 className="w-full text-center text-5xl h-16">Esqueci...</H1>
-        <P className="w-full text-center text-xl">Vamos ver se é você mesmo!!!</P>
+        <P className="w-full text-center text-xl">Agora sim.!!! Iremos trocar sua senha.</P>
         <View className=" flex flex-col gap-5">
-          <Input label="Codigo" labelClasses="text-lg" placeholder="Insira o cpf" />
+          <Input label="Nova Senha" labelClasses="text-lg" placeholder="Insira a Senha" />
+          <Input label="Repita a Senha" labelClasses="text-lg" placeholder="repita Novamente" />
         </View>
 
-        <Button
-          onPress={() => router.push('/(auth)/forgot-password/step2')}
-          label="Enviar"
-          className=""
-          size={'lg'}
-        />
+        <Button onPress={() => router.replace('/(auth)')} label="Salvar" className="" size={'lg'} />
       </View>
     </View>
   );

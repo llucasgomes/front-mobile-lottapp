@@ -5,6 +5,7 @@ import { StatusBar } from 'react-native';
 import { Stack } from 'expo-router';
 
 import SafeScreen from '@/components/SafeScreen';
+import { ThemeToggle } from '@/hooks/useColorScheme';
 import { ThemeProvider } from '@/providers/ThemeProvider';
 
 export default function RootLayout() {
@@ -17,8 +18,12 @@ export default function RootLayout() {
         translucent
       />
       <SafeScreen>
-        <Stack screenOptions={{ headerShown: false }} />
+        <Stack initialRouteName="(auth)/index">
+          <Stack.Screen name="(auth)/index" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)/index" options={{ headerShown: false }} />
+        </Stack>
       </SafeScreen>
+      <ThemeToggle />
     </ThemeProvider>
   );
 }

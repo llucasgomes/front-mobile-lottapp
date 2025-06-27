@@ -39,7 +39,7 @@ export default function Index() {
           </View>
         </View>
 
-        <Button label="Entrar" className="" size={'lg'} />
+        <Button onPress={() => router.replace('/(tabs)')} label="Entrar" className="" size={'lg'} />
       </View>
     </View>
   );

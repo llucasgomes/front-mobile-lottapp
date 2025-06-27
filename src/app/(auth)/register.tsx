@@ -9,6 +9,7 @@ import '@/styles/global.css';
 
 export default function Regiter() {
   const router = useRouter();
+  const loading = true;
   return (
     <View className="pt-11 px-6 flex-1 justify-center gap-5 ">
       <View className="w-full flex flex-col gap-7">
@@ -32,7 +33,12 @@ export default function Regiter() {
             />
           </View>
         </View>
-        <Button disabled label="Criar Conta" className="disabled:bg-muted-foreground" size={'lg'} />
+        <Button
+          disabled={loading}
+          label="Criar Conta"
+          className="disabled:bg-muted-foreground"
+          size={'lg'}
+        />
       </View>
     </View>
   );

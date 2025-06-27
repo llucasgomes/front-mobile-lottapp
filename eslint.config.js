@@ -1,11 +1,11 @@
-import js from '@eslint/js';
-import prettier from 'eslint-config-prettier';
-import importPlugin from 'eslint-plugin-import';
-import prettierPlugin from 'eslint-plugin-prettier';
-import reactHooks from 'eslint-plugin-react-hooks';
-import unusedImports from 'eslint-plugin-unused-imports';
+const js = require('@eslint/js');
+const prettier = require('eslint-config-prettier');
+const importPlugin = require('eslint-plugin-import');
+const prettierPlugin = require('eslint-plugin-prettier');
+const reactHooks = require('eslint-plugin-react-hooks');
+const unusedImports = require('eslint-plugin-unused-imports');
 
-export default [
+module.exports = [
   js.configs.recommended,
   prettier,
   {
